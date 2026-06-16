@@ -1,6 +1,9 @@
 # claude_code_toy_marketplace
 
 A mobile-first toy marketplace SPA built with React 18 + TypeScript + Vite + Supabase.
+![alt text](user-profile.png)
+![alt text](user-signup-filled.png)
+![alt text](end-to-end-conversation-001.png)
 ---
 
 ## Session Log — Changes & Prompts
