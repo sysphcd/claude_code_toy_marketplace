@@ -1,0 +1,41 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications (F8)":
+      - list [ref=e62]:
+        - status [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]: Listing published
+            - generic [ref=e77]: Your product has been posted.
+          - button [ref=e78] [cursor=pointer]:
+            - img [ref=e79]
+    - region "Notifications alt+T"
+    - generic [ref=e83]:
+      - banner [ref=e84]:
+        - button [ref=e85] [cursor=pointer]:
+          - img
+        - button "Marketplace Logo" [ref=e87] [cursor=pointer]:
+          - img "Marketplace Logo" [ref=e88]
+        - generic [ref=e89]:
+          - button [ref=e90] [cursor=pointer]:
+            - generic [ref=e91]:
+              - img
+          - button [ref=e92] [cursor=pointer]:
+            - img
+      - main [ref=e94]:
+        - link "+ Create listing" [ref=e96] [cursor=pointer]:
+          - /url: /create-listing/new
+          - button "+ Create listing" [ref=e97]:
+            - img
+            - text: + Create listing
+        - generic [ref=e99]:
+          - heading "Overview" [level=1] [ref=e100]
+          - paragraph [ref=e101]: Your active listings
+        - generic [ref=e103] [cursor=pointer]:
+          - img "Toy BullDozer" [ref=e107]
+          - generic [ref=e108]:
+            - generic [ref=e109]:
+              - heading "Toy BullDozer" [level=3] [ref=e110]
+              - link "Edit" [ref=e111]:
+                - /url: /create-listing/edit/83d6b8b4-8dcc-47ab-a430-2b6c1e6151f1
+            - generic [ref=e112]: $45
+  - status [ref=e113]: Notification Listing publishedYour product has been posted.

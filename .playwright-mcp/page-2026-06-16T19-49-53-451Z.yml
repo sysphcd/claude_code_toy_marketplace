@@ -1,0 +1,31 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications (F8)":
+      - list [ref=e60]:
+        - status [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: Account created!
+            - generic [ref=e64]: Welcome! You can now start exploring the marketplace.
+          - button [ref=e65] [cursor=pointer]:
+            - img [ref=e66]
+    - region "Notifications alt+T"
+    - generic [ref=e70]:
+      - banner [ref=e71]:
+        - button [ref=e72] [cursor=pointer]:
+          - img
+        - button "Marketplace Logo" [ref=e74] [cursor=pointer]:
+          - img "Marketplace Logo" [ref=e75]
+        - generic [ref=e76]:
+          - button [ref=e77] [cursor=pointer]:
+            - generic [ref=e78]:
+              - img
+          - button [ref=e79] [cursor=pointer]:
+            - img
+      - main [ref=e81]:
+        - generic [ref=e82]:
+          - generic [ref=e83]: WOMEN/MEN
+          - generic [ref=e84]:
+            - heading "Toys (0)" [level=1] [ref=e85]
+            - button "Filter" [ref=e86] [cursor=pointer]
+        - generic [ref=e89]: No products found
+  - status [ref=e90]: Notification Account created!Welcome! You can now start exploring the marketplace.

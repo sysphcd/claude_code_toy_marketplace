@@ -1,0 +1,32 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e4]:
+    - heading "Marketplace" [level=3] [ref=e6]
+    - generic [ref=e8]:
+      - tablist [ref=e9]:
+        - tab "Sign In" [selected] [ref=e10] [cursor=pointer]
+        - tab "Sign Up" [ref=e11] [cursor=pointer]
+      - tabpanel "Sign In" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - heading "Welcome back" [level=2] [ref=e15]
+            - paragraph [ref=e16]: Sign in to your account
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - text: Email
+              - textbox "Email" [ref=e19]:
+                - /placeholder: Enter your email
+            - generic [ref=e20]:
+              - text: Password
+              - generic [ref=e21]:
+                - textbox "Enter your password" [ref=e22]
+                - button [ref=e23] [cursor=pointer]:
+                  - img
+            - button "Sign In" [ref=e24] [cursor=pointer]
+          - generic [ref=e25]:
+            - button "Forgot your password?" [ref=e26] [cursor=pointer]
+            - generic [ref=e27]:
+              - text: Don't have an account?
+              - button "Sign up" [ref=e28] [cursor=pointer]

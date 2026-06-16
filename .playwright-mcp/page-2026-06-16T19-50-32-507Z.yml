@@ -1,0 +1,54 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button [ref=e5] [cursor=pointer]:
+        - img
+      - button "Marketplace Logo" [ref=e7] [cursor=pointer]:
+        - img "Marketplace Logo" [ref=e8]
+      - generic [ref=e9]:
+        - button [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]:
+            - img
+        - button [ref=e12] [cursor=pointer]:
+          - img
+    - main [ref=e14]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e18] [cursor=pointer]:
+            - generic [ref=e56]:
+              - img "Upload 1" [ref=e57]
+              - button "×" [ref=e58]
+            - img [ref=e60]
+          - generic [ref=e23]:
+            - paragraph [ref=e24]: Upload up to 5 photos
+            - button "Fill with sample data" [ref=e25] [cursor=pointer]:
+              - img [ref=e26]
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - generic [ref=e31]: Product name
+            - textbox "Product name" [ref=e32]
+          - generic [ref=e33]:
+            - generic [ref=e34]: Price
+            - spinbutton "Price" [ref=e35]
+          - generic [ref=e36]:
+            - generic [ref=e37]: Color
+            - textbox "Color" [ref=e38]
+          - generic [ref=e39]:
+            - generic [ref=e40]: Leather
+            - textbox "Leather" [ref=e41]
+          - generic [ref=e42]:
+            - generic [ref=e43]: Year purchased
+            - spinbutton "Year purchased" [ref=e44]
+          - generic [ref=e45]:
+            - generic [ref=e46]: Stamp
+            - textbox "Stamp" [ref=e47]
+          - generic [ref=e48]:
+            - generic [ref=e49]: Location
+            - textbox "Location" [ref=e50]
+          - generic [ref=e51]:
+            - generic [ref=e52]: Description
+            - textbox "Description" [ref=e53]
+        - button "Publish" [ref=e55] [cursor=pointer]
