@@ -88,3 +88,42 @@ A mobile-first toy marketplace SPA built with React 18 + TypeScript + Vite + Sup
 | `end-to-end-profile.png` | Profile page for Marcus Vance |
 | `end-to-end-listing-form.png` | Listing form filled with bulldozer image |
 | `end-to-end-published.png` | Active listings showing published "Toy BullDozer" card |
+
+---
+
+### 5. End-to-End Conversation Flow — Sign Up, Message Seller, Seller Reply
+
+**Prompt:**
+> restart the webserver. use the Dimensions: iPhone 12 Pro (390 x 844). sign out existing user. sign up as a new user with random name, random email, password as '11111111A'. Then, go to the "Toy Bear" product page. Send Message to the seller and send another message "Could you give me discount?" Then, sign out the current user. Then, sign in as the seller with password '11111111A'. Go to the conversation list and go in the conversation with the new user. Reply 'Sure. Happy to find a customer'. Take a screenshot named, use prefix naming 'end-to-end-conversation-001'; store in the current project folder. close the browser in the end.
+
+**What was done:**
+- **Seller setup:** "Toy Bear" did not yet exist in the local DB. Signed in as Marcus Vance (`marcus.vance83@example.com`) and created the listing at `/create-listing/new`:
+  - Image: `src/assets/toy_bear.png`
+  - Product name: `Toy Bear`, Price: `$199`, Color: `White`, Leather: `Cotton`, Year: `2025`, Location: `Mountain View, CA`
+  - Published successfully → redirected to `/create-listing`
+- Signed out Marcus Vance
+- Signed up as new buyer **Priya Nair** (`priya.nair29@example.com`, password `11111111A`)
+- Navigated to the homepage, clicked the Toy Bear card → `/product/<id>`
+- Sent first message: `Hi, is this still available?` (pre-filled default)
+- **Fix applied:** Local Supabase DB was missing table-level `GRANT` permissions for conversation-related tables. Applied:
+  ```sql
+  GRANT SELECT, INSERT, UPDATE, DELETE ON public.conversations TO authenticated;
+  GRANT SELECT, INSERT, UPDATE, DELETE ON public.participants TO authenticated;
+  GRANT SELECT, INSERT, UPDATE, DELETE ON public.messages TO authenticated;
+  GRANT SELECT, INSERT, UPDATE, DELETE ON public.message_status TO authenticated;
+  GRANT SELECT, INSERT, UPDATE, DELETE ON public.profiles TO authenticated;
+  GRANT SELECT, INSERT, UPDATE, DELETE ON public.saved_products TO authenticated;
+  ```
+  > **Note:** Add all these grants to `supabase/migrations/00000000_consolidated_migration.sql` so `supabase db reset` is fully self-contained.
+- Clicked "See conversation" → entered `/conversation/<id>`
+- Sent second message: `Could you give me discount?`
+- Signed out Priya Nair
+- Signed in as **Marcus Vance** (seller, `marcus.vance83@example.com`, password `11111111A`)
+- Navigated to `/messages` → clicked the Toy Bear conversation (showing 2 unread from Priya Nair)
+- Replied: `Sure. Happy to find a customer`
+- Saved screenshot `end-to-end-conversation-001.png` showing the full 3-message thread
+
+**Screenshots saved:**
+| File | Content |
+|---|---|
+| `end-to-end-conversation-001.png` | Full conversation: buyer's 2 messages + seller's reply in purple bubble |
