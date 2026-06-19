@@ -6,6 +6,60 @@ A mobile-first toy marketplace SPA built with React 18 + TypeScript + Vite + Sup
 ![alt text](end-to-end-conversation-001.png)
 ---
 
+## MCP Servers
+
+This project uses [Model Context Protocol (MCP)](https://modelcontextprotocol.io) servers to give Claude Code live browser control and up-to-date library documentation during development sessions.
+
+### Configuration
+
+MCP servers are declared in `.mcp.json` at the project root (gitignored — credentials stay local). Copy `.mcp.json.example` and fill in your values:
+
+```bash
+cp .mcp.json.example .mcp.json
+# edit .mcp.json with your API keys and project refs
+```
+
+### Playwright
+
+**Package:** `@playwright/mcp@latest`  
+**Purpose:** Gives Claude Code a real browser it can drive — navigate pages, click, type, upload files, take screenshots, and assert UI state.
+
+```json
+{
+  "playwright": {
+    "command": "npx",
+    "args": ["-y", "@playwright/mcp@latest", "--browser", "chrome"]
+  }
+}
+```
+
+Used in this project to:
+- Take mobile-viewport screenshots (iPhone 12 Pro 390×844) at each development milestone
+- Run end-to-end flows: sign up, create listings, send messages, verify realtime chat
+- Upload product images via the file chooser during listing creation
+- Verify UI changes (e.g., theme color swap from blue to purple) before committing
+
+Playwright MCP sessions write page-state snapshots to `.playwright-mcp/` (gitignored).
+
+### Context7
+
+**Transport:** HTTP (`https://mcp.context7.com/mcp`)  
+**Purpose:** Serves current library documentation (React, Supabase, TanStack Query, Vite, shadcn/ui, etc.) directly into Claude Code's context so answers reflect the actual installed versions, not training-data snapshots.
+
+```json
+{
+  "context7": {
+    "type": "http",
+    "url": "https://mcp.context7.com/mcp",
+    "args": ["--header", "CONTEXT7_API_KEY: <your-key>"]
+  }
+}
+```
+
+Get a free API key at [context7.com](https://context7.com). Used whenever Claude Code looks up Supabase RPC patterns, TanStack Query cache invalidation, or shadcn/ui component props to ensure the answers match the versions pinned in `package.json`.
+
+---
+
 ## Session Log — Changes & Prompts
 
 ### 1. Homepage Screenshot (iPhone 12 Pro)
