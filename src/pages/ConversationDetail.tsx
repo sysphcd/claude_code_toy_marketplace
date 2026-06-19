@@ -32,7 +32,7 @@ interface ConversationDetails {
 const ConversationDetail = () => {
   const { conversationId } = useParams<{ conversationId: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { isUserOnline } = usePresence();
   const { toast } = useToast();
   
@@ -41,6 +41,7 @@ const ConversationDetail = () => {
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const initialScrollDoneRef = useRef(false);
   const readMarkedRef = useRef<Set<string>>(new Set());
@@ -48,31 +49,28 @@ const ConversationDetail = () => {
   const [messagesVisible, setMessagesVisible] = useState(false);
   const [conversationEntryTimestamp, setConversationEntryTimestamp] = useState<string | null>(null);
 
+  // Auth redirect — uses authLoading so it doesn't interfere with data fetch timing
   useEffect(() => {
-    // Reset scroll state and visibility when conversation changes
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [authLoading, user, navigate]);
+
+  // Data fetch + scroll reset — only re-runs when user or conversation changes,
+  // not on every loading state change (prevents double-fetch)
+  useEffect(() => {
     initialScrollDoneRef.current = false;
     setMessagesVisible(false);
-    
-    // Store conversation entry timestamp for this user and conversation
+
     if (user && conversationId) {
       const timestamp = new Date().toISOString();
       const key = `conversation_entry_${user.id}_${conversationId}`;
       localStorage.setItem(key, timestamp);
       setConversationEntryTimestamp(timestamp);
-    }
-    
-    // Only redirect if we're sure the user isn't authenticated (not during loading)
-    if (!loading && !user) {
-      navigate('/auth');
-      return;
-    }
-    
-    // Only fetch data if we have a user and conversation ID
-    if (user && conversationId) {
       fetchConversationDetails();
       fetchMessages();
     }
-  }, [user, conversationId, navigate, loading]);
+  }, [user, conversationId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Real-time message subscription
   useEffect(() => {
@@ -109,9 +107,8 @@ const ConversationDetail = () => {
           
           // Auto-scroll for all new messages (both from me and other users)
           setTimeout(() => {
-            const messagesContainer = document.querySelector('.overflow-y-auto');
-            if (messagesContainer) {
-              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            if (scrollContainerRef.current) {
+              scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
             }
             messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
           }, 100);
@@ -125,6 +122,9 @@ const ConversationDetail = () => {
   }, [conversationId]);
 
   const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
     messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   };
 
@@ -326,9 +326,8 @@ const ConversationDetail = () => {
       
       // Auto-scroll to bottom after sending message
       setTimeout(() => {
-        const messagesContainer = document.querySelector('.overflow-y-auto');
-        if (messagesContainer) {
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
         }
         messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
       }, 100);
@@ -478,7 +477,7 @@ const ConversationDetail = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-4 py-4">
         {messagesVisible ? (
           <>
             {messages.map((message, index) => {

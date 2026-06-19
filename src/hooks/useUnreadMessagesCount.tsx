@@ -16,35 +16,9 @@ export const useUnreadMessagesCount = () => {
 
     try {
       setLoading(true);
-      
-      // Get all user conversations
-      const { data: conversations, error: conversationsError } = await supabase
-        .rpc('get_user_conversations');
-
-      if (conversationsError) throw conversationsError;
-
-      let totalUnread = 0;
-
-      // Get unread count for each conversation
-      if (conversations && conversations.length > 0) {
-        const unreadPromises = conversations.map(conversation => 
-          supabase.rpc('get_unread_count_for_conversation', {
-            conv_id: conversation.id
-          })
-        );
-
-        const unreadResults = await Promise.all(unreadPromises);
-        
-        totalUnread = unreadResults.reduce((sum, result) => {
-          if (result.error) {
-            console.error('Error fetching unread count:', result.error);
-            return sum;
-          }
-          return sum + (result.data || 0);
-        }, 0);
-      }
-
-      setUnreadCount(totalUnread);
+      const { data, error } = await (supabase as any).rpc('get_total_unread_count');
+      if (error) throw error;
+      setUnreadCount(Number(data) || 0);
     } catch (error) {
       console.error('Error fetching unread messages count:', error);
       setUnreadCount(0);
@@ -57,11 +31,27 @@ export const useUnreadMessagesCount = () => {
     if (!authLoading) {
       fetchUnreadCount();
     }
-  }, [user, authLoading]);
+  }, [user, authLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { 
-    unreadCount, 
-    loading: loading || authLoading, 
-    refetch: fetchUnreadCount 
+  // Keep badge in sync as new messages arrive
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('unread-count-updates')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        () => { fetchUnreadCount(); } // eslint-disable-line react-hooks/exhaustive-deps
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return {
+    unreadCount,
+    loading: loading || authLoading,
+    refetch: fetchUnreadCount
   };
 };

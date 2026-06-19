@@ -184,3 +184,83 @@ Get a free API key at [context7.com](https://context7.com). Used whenever Claude
 | File | Content |
 |---|---|
 | `end-to-end-conversation-001.png` | Full conversation: buyer's 2 messages + seller's reply in purple bubble |
+
+---
+
+### 6. Messaging Bug Fixes + Verification
+
+**Prompt:**
+> Examine my code to see if my messaging implementation is correct via Supabase. Focus on fixing the bugs you've mentioned. Verify afterwards with the end-to-end conversation flow.
+
+**Bugs identified and fixed:**
+
+#### Bug 1 — Double-fetch on initial load (`ConversationDetail.tsx`, `ConversationList.tsx`)
+**Root cause:** `loading` (local conversation-loading state) was in the main `useEffect` dependency array. When the component mounted, the effect ran and fetched data, which set `loading = false`, which triggered the effect again — causing both fetch functions to run twice.
+
+**Fix:** Split the single `useEffect` into two in both files:
+- An auth-redirect effect using `authLoading` from `useAuth()` (not the local loading state): `[authLoading, user, navigate]`
+- A data-fetch effect that only reruns when the user or conversation changes: `[user, conversationId]`
+
+Files changed: `src/pages/ConversationDetail.tsx`, `src/pages/ConversationList.tsx`
+
+---
+
+#### Bug 2 — Fragile scroll selector (`ConversationDetail.tsx`)
+**Root cause:** Auto-scroll after send/receive used `document.querySelector('.overflow-y-auto')` — a global DOM search that would match the first element with that class, including the shadcn `command.tsx` dropdown (`max-h-[300px] overflow-y-auto`), scrolling the wrong container silently.
+
+**Fix:** Added `scrollContainerRef = useRef<HTMLDivElement>(null)` and attached it to the messages scroll `<div>`. Replaced all three `querySelector` calls with `scrollContainerRef.current`.
+
+Files changed: `src/pages/ConversationDetail.tsx`
+
+---
+
+#### Bug 3 — `buyer_id` missing from `get_user_conversations` RPC
+**Root cause:** The SQL function's `RETURNS TABLE` did not include `buyer_id`, so `ConversationList.tsx` always received `undefined` for that field (stored as `''`). The conversation list header could never correctly show buyer presence indicators.
+
+**Fix:** Migration `20260619210403_fix_messaging_bugs.sql` drops and recreates `get_user_conversations` with `buyer_id uuid` in both the return type and the `SELECT`.
+
+> PostgreSQL does not allow `CREATE OR REPLACE` to change a function's return type — the function must be `DROP`ped first.
+
+Files changed: `supabase/migrations/20260619210403_fix_messaging_bugs.sql`
+
+---
+
+#### Bug 4 — N+1 unread count queries (`useUnreadMessagesCount.tsx`, `ConversationList.tsx`)
+**Root cause:** Both `useUnreadMessagesCount` and `ConversationList` called `get_unread_count_for_conversation` once per conversation via `Promise.all`. With N conversations, that's N sequential round-trips to the DB just to render a badge.
+
+**Fix:** Added a new SQL function `get_total_unread_count()` that counts all unread messages across all of the user's conversations in a single query. `useUnreadMessagesCount` now calls it once.
+
+Files changed: `src/hooks/useUnreadMessagesCount.tsx`, `supabase/migrations/20260619210403_fix_messaging_bugs.sql`
+
+---
+
+#### Bug 5 — No realtime updates in conversation list or unread badge
+**Root cause:** `ConversationList` and `useUnreadMessagesCount` only fetched once on mount. New messages arriving in other tabs would not update the conversation list's last-message preview, unread counts, or the nav badge until a full page reload.
+
+**Fix:** Added `postgres_changes` `INSERT` subscriptions on the `messages` table in both `ConversationList.tsx` and `useUnreadMessagesCount.tsx`. Each subscription calls the relevant fetch function when a new message is inserted, so counts and previews stay live.
+
+Files changed: `src/pages/ConversationList.tsx`, `src/hooks/useUnreadMessagesCount.tsx`
+
+---
+
+#### Bug 6 — Missing table-level GRANTs (permanent fix)
+**Root cause:** Previously documented in sessions 4 and 5 as a one-off fix, but never committed to the migration file. After every `supabase db reset` all DML from the client returned `403 permission denied` because Postgres requires explicit `GRANT` on tables in addition to RLS policies.
+
+**Fix:** Added all eight `GRANT SELECT, INSERT, UPDATE, DELETE ON public.<table> TO authenticated` statements to migration `20260619210403_fix_messaging_bugs.sql` so `supabase db reset` is now fully self-contained.
+
+Tables covered: `products`, `product_images`, `conversations`, `participants`, `messages`, `message_status`, `profiles`, `saved_products`
+
+---
+
+**Files changed summary:**
+| File | Changes |
+|---|---|
+| `src/pages/ConversationDetail.tsx` | Split useEffect, added `scrollContainerRef`, replaced 3× `querySelector` |
+| `src/pages/ConversationList.tsx` | Split useEffect, added realtime subscription |
+| `src/hooks/useUnreadMessagesCount.tsx` | Replaced N+1 with `get_total_unread_count()`, added realtime subscription |
+| `supabase/migrations/20260619210403_fix_messaging_bugs.sql` | New migration: fixed `get_user_conversations` return type, added `get_total_unread_count()`, added all table GRANTs |
+
+**Screenshots saved:**
+| File | Content |
+|---|---|
+| `end-to-end-conversation-001.png` | Full 3-message thread: buyer's 2 white bubbles + seller's purple reply, with "unread message below" dashed indicator |

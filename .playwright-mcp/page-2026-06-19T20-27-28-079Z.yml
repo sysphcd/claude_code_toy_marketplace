@@ -1,0 +1,34 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: "?"
+        - generic [ref=e40]:
+          - heading "Unknown Product" [level=1] [ref=e41]
+          - paragraph [ref=e42]: $0
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: "Buyer: Priya Nair"
+            - generic "Offline" [ref=e45]
+      - button [ref=e46] [cursor=pointer]:
+        - img [ref=e47]
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]: Today
+        - generic [ref=e55]: unread message below
+        - generic [ref=e58]:
+          - generic [ref=e59]: Hi, is this still available?
+          - paragraph [ref=e60]: 9:26 PM
+      - generic [ref=e63]:
+        - generic [ref=e64]: Could you give me discount?
+        - paragraph [ref=e65]: 9:26 PM
+      - generic [ref=e78]:
+        - generic [ref=e79]: Sure. Happy to find a customer
+        - paragraph [ref=e80]: 9:27 PM
+    - generic [ref=e67]:
+      - button [ref=e68] [cursor=pointer]:
+        - img [ref=e69]
+      - textbox "Aa" [ref=e74]
+      - button "Send" [disabled]

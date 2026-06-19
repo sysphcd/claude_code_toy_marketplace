@@ -1,0 +1,17 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button [ref=e5] [cursor=pointer]:
+        - img
+      - button "Marketplace Logo" [ref=e7] [cursor=pointer]:
+        - img "Marketplace Logo" [ref=e8]
+      - generic [ref=e9]:
+        - button [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]:
+            - img
+        - button [ref=e12] [cursor=pointer]:
+          - img
+    - generic [ref=e15]: Loading...

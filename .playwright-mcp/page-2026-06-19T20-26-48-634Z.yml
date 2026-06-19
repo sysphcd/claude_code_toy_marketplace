@@ -1,0 +1,30 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e180]:
+    - generic [ref=e181]:
+      - generic [ref=e182]:
+        - generic [ref=e185]: "?"
+        - generic [ref=e186]:
+          - heading "Unknown Product" [level=1] [ref=e187]
+          - paragraph [ref=e188]: $0
+          - generic [ref=e189]:
+            - paragraph [ref=e190]: "Seller: Marcus Vance"
+            - generic "Offline" [ref=e191]
+      - button [ref=e192] [cursor=pointer]:
+        - img [ref=e193]
+    - generic [ref=e196]:
+      - generic [ref=e197]:
+        - generic [ref=e198]: Today
+        - generic [ref=e200]:
+          - generic [ref=e201]: Hi, is this still available?
+          - paragraph [ref=e202]: 9:26 PM
+      - generic [ref=e215]:
+        - generic [ref=e216]: Could you give me discount?
+        - paragraph [ref=e217]: 9:26 PM
+    - generic [ref=e204]:
+      - button [ref=e205] [cursor=pointer]:
+        - img [ref=e206]
+      - textbox "Aa" [ref=e211]
+      - button "Send" [disabled]

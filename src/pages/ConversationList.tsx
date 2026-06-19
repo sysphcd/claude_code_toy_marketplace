@@ -22,23 +22,40 @@ interface ConversationWithDetails {
 
 const Conversations = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [conversations, setConversations] = useState<ConversationWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
 
+  // Auth redirect — independent of conversation loading state
   useEffect(() => {
-    // Only redirect if we're sure the user isn't authenticated (not during loading)
-    if (!loading && !user) {
+    if (!authLoading && !user) {
       navigate('/auth');
-      return;
     }
+  }, [authLoading, user, navigate]);
 
-    // Only fetch conversations if we have a user
+  // Initial data fetch — only re-runs when user changes, not on loading state changes
+  useEffect(() => {
     if (user) {
       fetchConversations();
     }
-  }, [user, navigate, loading]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Realtime: refresh list whenever any new message is inserted
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('conversation-list-updates')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'messages' },
+        () => { fetchConversations(); } // eslint-disable-line react-hooks/exhaustive-deps
+      )
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchConversations = async () => {
     if (!user) return;
