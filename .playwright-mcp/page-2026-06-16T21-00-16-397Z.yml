@@ -1,0 +1,48 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e4]:
+    - heading "Marketplace" [level=3] [ref=e6]
+    - generic [ref=e8]:
+      - tablist [ref=e9]:
+        - tab "Sign In" [ref=e10] [cursor=pointer]
+        - tab "Sign Up" [active] [selected] [ref=e11] [cursor=pointer]
+      - tabpanel "Sign Up" [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - heading "Create your account" [level=2] [ref=e34]
+              - paragraph [ref=e35]: Join the Marketplace
+            - button "Fill with sample data" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+          - generic [ref=e40]:
+            - generic [ref=e41]:
+              - generic [ref=e42]:
+                - text: First Name
+                - textbox "First Name" [ref=e43]:
+                  - /placeholder: John
+              - generic [ref=e44]:
+                - text: Last Name
+                - textbox "Last Name" [ref=e45]:
+                  - /placeholder: Doe
+            - generic [ref=e46]:
+              - text: Email
+              - textbox "Email" [ref=e47]:
+                - /placeholder: john@example.com
+            - generic [ref=e48]:
+              - text: Password
+              - generic [ref=e49]:
+                - textbox "Create a strong password" [ref=e50]
+                - button [ref=e51] [cursor=pointer]:
+                  - img
+            - generic [ref=e52]:
+              - text: Confirm Password
+              - generic [ref=e53]:
+                - textbox "Confirm your password" [ref=e54]
+                - button [ref=e55] [cursor=pointer]:
+                  - img
+            - button "Sign Up" [ref=e56] [cursor=pointer]
+          - generic [ref=e57]:
+            - text: Already have an account?
+            - button "Sign in" [ref=e58] [cursor=pointer]

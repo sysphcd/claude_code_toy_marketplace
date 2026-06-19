@@ -1,0 +1,26 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e212]:
+    - generic [ref=e213]:
+      - generic [ref=e214]:
+        - img "Toy Bear" [ref=e216]
+        - generic [ref=e217]:
+          - heading "Toy Bear" [level=1] [ref=e218]
+          - paragraph [ref=e219]: $199
+          - generic [ref=e220]:
+            - paragraph [ref=e221]: "Seller: Marcus Vance"
+            - generic "Offline" [ref=e222]
+      - button [ref=e223] [cursor=pointer]:
+        - img [ref=e224]
+    - generic [ref=e228]:
+      - generic [ref=e229]: Today
+      - generic [ref=e231]:
+        - generic [ref=e232]: Hi, is this still available?
+        - paragraph [ref=e233]: 10:00 PM
+    - generic [ref=e235]:
+      - button [ref=e236] [cursor=pointer]:
+        - img [ref=e237]
+      - textbox "Aa" [active] [ref=e242]
+      - button "Send" [disabled]

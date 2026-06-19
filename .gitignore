@@ -30,3 +30,6 @@ dist-ssr
 supabase/.temp
 .mcp.json
 .env
+
+# playwright files
+.playwright-report/*
