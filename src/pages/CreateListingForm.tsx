@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react";
 import NavigationBar from "@/components/NavigationBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -210,6 +211,34 @@ const CreateListingForm = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
+      const BANNED_WORDS = ['fuck', 'murder', 'shit', 'bitch', 'asshole', 'kill'];
+      const textFields: Record<string, string> = {
+        product_name: productName.trim(),
+        color: color.trim(),
+        leather: leather.trim(),
+        stamp: stamp.trim(),
+        location: location.trim(),
+        description: description.trim(),
+      };
+      const profanityMatches: { field: string; word: string }[] = [];
+      for (const [field, value] of Object.entries(textFields)) {
+        for (const word of BANNED_WORDS) {
+          if (new RegExp(`\\b${word}\\b`, 'i').test(value)) {
+            profanityMatches.push({ field, word });
+          }
+        }
+      }
+      if (profanityMatches.length > 0) {
+        Sentry.captureMessage('Profanity detected in product listing', {
+          level: 'warning',
+          extra: {
+            userId: user?.id ?? 'unauthenticated',
+            productName: productName.trim(),
+            matches: profanityMatches,
+          },
+        });
+      }
+
       if (!user) {
         toast({ title: "Please sign in", description: "You must be logged in to publish.", variant: "destructive" });
         return;

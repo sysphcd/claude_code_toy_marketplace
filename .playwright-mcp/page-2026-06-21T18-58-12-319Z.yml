@@ -1,0 +1,27 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - button [ref=e5] [cursor=pointer]:
+        - img
+      - button "Marketplace Logo" [ref=e7] [cursor=pointer]:
+        - img "Marketplace Logo" [ref=e8]
+      - generic [ref=e9]:
+        - button [ref=e10] [cursor=pointer]:
+          - generic [ref=e11]:
+            - img
+        - button [ref=e12] [cursor=pointer]:
+          - img
+    - main [ref=e14]:
+      - generic [ref=e15]:
+        - heading "About Marketplace" [level=1] [ref=e16]
+        - paragraph [ref=e17]: Marketplace is your trusted platform for buying and selling authentic pre-owned products.
+        - paragraph [ref=e18]: We connect sellers with buyers in a safe, secure environment where quality and authenticity are guaranteed.
+        - generic [ref=e19]:
+          - paragraph [ref=e20]: Sentry Integration Test
+          - paragraph [ref=e21]: Use these buttons to verify error tracking is working.
+          - generic [ref=e22]:
+            - button "Send test event" [ref=e23] [cursor=pointer]
+            - button "Trigger crash" [active] [ref=e24] [cursor=pointer]

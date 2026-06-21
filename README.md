@@ -264,3 +264,80 @@ Tables covered: `products`, `product_images`, `conversations`, `participants`, `
 | File | Content |
 |---|---|
 | `end-to-end-conversation-001.png` | Full 3-message thread: buyer's 2 white bubbles + seller's purple reply, with "unread message below" dashed indicator |
+
+---
+
+### 7. Sentry Integration — Error Tracking & Profanity Detection
+
+**Prompts:**
+> Create a new Sentry project by using the current code base. Use the About.ts page to test the functionality.
+
+> Let's detect if the information of the product created in CreateListingForm.tsx include any cursing words like 'fuck', 'murder'. Use Sentry.captureMessage to send those out.
+
+**What was done:**
+
+#### Sentry project setup
+
+- Used the Sentry MCP to find the `sysphbox` organization (DE region) and create a new project:
+  - **Project:** `claude-code-toy-marketplace`
+  - **Platform:** `javascript-react`
+  - **DSN:** `https://58a2056684ed3f6a7e53501f3b43b1f2@o4511597393346560.ingest.de.sentry.io/4511604943093840`
+- Installed `@sentry/react` via npm
+- Initialized Sentry in `src/main.tsx` before `createRoot`, with browser tracing and session replay integrations (`tracesSampleRate: 1.0`, `replaysOnErrorSampleRate: 1.0`)
+
+#### About page test harness (`src/pages/About.tsx`)
+
+- Wrapped the page component with `Sentry.withErrorBoundary`, providing a fallback UI with a reload link — so any uncaught render error is both captured by Sentry and gracefully displayed to the user
+- Added a **Sentry Integration Test** panel with two buttons:
+  - **"Send test event"** — calls `Sentry.captureException` manually and shows a confirmation alert
+  - **"Trigger crash"** — throws a real error, caught by the error boundary, reported to Sentry
+
+Both events were confirmed live in the Sentry dashboard within seconds of clicking:
+
+| Sentry issue | Message | Level |
+|---|---|---|
+| `CLAUDE-CODE-TOY-MARKETPLACE-1` | Manual capture from About page | error |
+| `CLAUDE-CODE-TOY-MARKETPLACE-2` | Test error from About page — Sentry is working! | error |
+
+![Manual capture from About page](screenshots/manual_capture_from_about_page.png)
+
+![Test error from About page](screenshots/test_error_from_about_page.png)
+
+#### Profanity detection in listing form (`src/pages/CreateListingForm.tsx`)
+
+- Added `import * as Sentry from "@sentry/react"` at the top
+- On form submit, before the auth guard runs, all free-text fields are checked against a banned-word list (`fuck`, `murder`, `shit`, `bitch`, `asshole`, `kill`) using case-insensitive word-boundary regex (`\bword\b`) to avoid false matches on substrings
+- Fields checked: `product_name`, `color`, `leather`, `stamp`, `location`, `description`
+- On a match, calls `Sentry.captureMessage('Profanity detected in product listing', { level: 'warning', extra: { userId, productName, matches } })` — where `matches` is an array of `{ field, word }` pairs
+- The check runs even for unauthenticated users (moved before the `if (!user) return` guard) so no submission attempt is missed
+
+Confirmed in Sentry (`CLAUDE-CODE-TOY-MARKETPLACE-3`) with product name `"Fuck this murder toy"` — both words were reported with their field name:
+
+```json
+"matches": [
+  { "field": "product_name", "word": "fuck" },
+  { "field": "product_name", "word": "murder" }
+]
+```
+
+![Profanity detected in product listing](screenshots/profanity_detected_in_product_listing.png)
+
+**Files changed:**
+| File | Changes |
+|---|---|
+| `src/main.tsx` | Sentry initialized with browser tracing + session replay before `createRoot` |
+| `src/pages/About.tsx` | Wrapped with `Sentry.withErrorBoundary`; added two test buttons |
+| `src/pages/CreateListingForm.tsx` | Profanity check runs on submit; matched words sent via `Sentry.captureMessage` |
+
+---
+
+### Screenshots Reference
+
+All screenshots are stored in the `screenshots/` folder at the project root.
+
+| File | Content |
+|---|---|
+| `screenshots/manual_capture_from_about_page.png` | Sentry dashboard — issue `CLAUDE-CODE-TOY-MARKETPLACE-1`: manual `captureException` fired from the About page |
+| `screenshots/test_error_from_about_page.png` | Sentry dashboard — issue `CLAUDE-CODE-TOY-MARKETPLACE-2`: crash triggered by the "Trigger crash" button, caught by the error boundary |
+| `screenshots/profanity_detected_in_product_listing.png` | Sentry dashboard — issue `CLAUDE-CODE-TOY-MARKETPLACE-3`: `warning`-level `captureMessage` from the profanity detector in the listing form |
+| `screenshots/product_publish_error.png` | App UI — "Publish failed: permission denied for table products" error toast (reference screenshot showing the Supabase GRANT issue fixed in Session 6) |
