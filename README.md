@@ -58,6 +58,52 @@ Playwright MCP sessions write page-state snapshots to `.playwright-mcp/` (gitign
 
 Get a free API key at [context7.com](https://context7.com). Used whenever Claude Code looks up Supabase RPC patterns, TanStack Query cache invalidation, or shadcn/ui component props to ensure the answers match the versions pinned in `package.json`.
 
+### Image Tools Server (custom Docker MCP)
+
+**Type:** Docker container (custom-built image)  
+**Image:** `mcp-toy-image-tools-server`  
+**Runtime:** Python 3.11  
+**Purpose:** Provides image fetch and resize tools for Claude Code — download images from the web via DuckDuckGo search and resize them to exact pixel dimensions.
+
+```json
+{
+  "image-tools-server-docker": {
+    "command": "docker",
+    "args": [
+      "run", "--rm", "-i",
+      "-v", "${PWD}/images:/app/images",
+      "-v", "${PWD}/input:/app/input",
+      "-v", "${PWD}/output:/app/output",
+      "mcp-toy-image-tools-server"
+    ]
+  }
+}
+```
+
+**Volume mounts:**
+| Host path | Container path | Purpose |
+|---|---|---|
+| `./images` | `/app/images` | Default output dir for fetched images |
+| `./input` | `/app/input` | Source images for resize operations |
+| `./output` | `/app/output` | Resized image output |
+
+**Tools provided:**
+
+| Tool | Description |
+|---|---|
+| `fetch_toy_image` | Downloads images from the web using DuckDuckGo image search. Params: `keyword`, `count` (default 3), `output_dir` (default `./images`), `max_search_results` (default 20) |
+| `resize_image` | Resizes an image to specified pixel dimensions. Params: `image_path`, `width`, `height`, `maintain_aspect` (default false), `output_path` |
+
+> **Note:** The Docker container only has access to paths mounted via `-v`. Host paths outside `./images`, `./input`, and `./output` are not reachable. Use macOS `sips -Z <px> <file>` as a fallback for resizing files elsewhere on the host.
+
+**Build the image:**
+```bash
+# From the directory containing the server's Dockerfile
+docker build -t mcp-toy-image-tools-server .
+```
+
+Used in this project to download product/listing images during development sessions and resize them to fit upload constraints.
+
 ---
 
 ## Session Log — Changes & Prompts
@@ -328,6 +374,36 @@ Confirmed in Sentry (`CLAUDE-CODE-TOY-MARKETPLACE-3`) with product name `"Fuck t
 | `src/main.tsx` | Sentry initialized with browser tracing + session replay before `createRoot` |
 | `src/pages/About.tsx` | Wrapped with `Sentry.withErrorBoundary`; added two test buttons |
 | `src/pages/CreateListingForm.tsx` | Profanity check runs on submit; matched words sent via `Sentry.captureMessage` |
+
+---
+
+### 8. Whale Images — Download, Resize, Sign In as user001, Publish Listing
+
+**Prompt:**
+> download random pictures of single whale. resize below 150px either the width or the length. then, restart the web server. Sign out the current user. Sign in as user "user001" with email "user001@gmail.com" with password as '11111111A'. Then, create a new listing product to sell: use the screenshot. Then, publish the product to sell.
+
+**What was done:**
+
+- **Downloaded 3 whale images** from Wikimedia Commons via the Wikipedia API (public-domain NOAA + CC-licensed photos):
+  - `whale1.jpg` — Blue whale (NOAA/Flickr, public domain)
+  - `whale2.jpg` — Humpback whale underwater
+  - `whale3.jpg` — Sperm whale pair
+- **Resized all 3 images to 148px** (max dimension) using `sips -Z 148` so both width and height are below 150px:
+  | File | Before | After |
+  |---|---|---|
+  | `whale1.jpg` | 500×346 | 148×102 |
+  | `whale2.jpg` | 500×287 | 148×85 |
+  | `whale3.jpg` | 500×281 | 148×83 |
+- **Restarted the dev server** — running at `http://localhost:8081/` (ports 5173 and 8080 were in use)
+- **Signed in as user001** — account `user001@gmail.com` did not exist in the local DB, so it was created via Sign Up (First: `User`, Last: `001`, password `11111111A`) then auto-redirected to the marketplace
+- **Created and published listing** at `/create-listing/new`:
+  - Uploaded all 3 whale images via the file chooser
+  - Product name: `Blue Whale Plush Toy`
+  - Price: `$25`, Color: `Blue`, Leather: `No`, Year: `2022`, Stamp: `NOAA`, Location: `San Francisco, CA`
+  - Description: `Beautiful blue whale plush toy in excellent condition. Great for ocean animal collectors and kids alike. Soft, high-quality material with vivid blue coloring.`
+  - Clicked Publish → redirected to `/create-listing` with "Listing published — Your product has been posted." toast
+
+**Images saved:** `whale_images/whale1.jpg`, `whale_images/whale2.jpg`, `whale_images/whale3.jpg`
 
 ---
 
