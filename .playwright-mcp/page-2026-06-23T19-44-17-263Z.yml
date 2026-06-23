@@ -1,0 +1,41 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications (F8)":
+      - list [ref=e59]:
+        - status [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: Sign in failed
+            - generic [ref=e63]: Invalid login credentials
+          - button [ref=e64] [cursor=pointer]:
+            - img [ref=e65]
+    - region "Notifications alt+T"
+    - generic [ref=e33]:
+      - heading "Marketplace" [level=3] [ref=e35]
+      - generic [ref=e37]:
+        - tablist [ref=e38]:
+          - tab "Sign In" [selected] [ref=e39] [cursor=pointer]
+          - tab "Sign Up" [ref=e40] [cursor=pointer]
+        - tabpanel "Sign In" [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - heading "Welcome back" [level=2] [ref=e44]
+              - paragraph [ref=e45]: Sign in to your account
+            - generic [ref=e46]:
+              - generic [ref=e47]:
+                - text: Email
+                - textbox "Email" [ref=e48]:
+                  - /placeholder: Enter your email
+                  - text: user001@gmail.com
+              - generic [ref=e49]:
+                - text: Password
+                - generic [ref=e50]:
+                  - textbox "Enter your password" [ref=e51]: 11111111A
+                  - button [ref=e52] [cursor=pointer]:
+                    - img
+              - button "Sign In" [ref=e53] [cursor=pointer]
+            - generic [ref=e54]:
+              - button "Forgot your password?" [ref=e55] [cursor=pointer]
+              - generic [ref=e56]:
+                - text: Don't have an account?
+                - button "Sign up" [ref=e57] [cursor=pointer]
+  - status [ref=e69]: Notification Sign in failedInvalid login credentials

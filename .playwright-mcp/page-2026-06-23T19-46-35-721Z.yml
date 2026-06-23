@@ -1,0 +1,41 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications (F8)":
+      - list [ref=e59]:
+        - status [ref=e236]:
+          - generic [ref=e237]:
+            - generic [ref=e238]: Listing published
+            - generic [ref=e239]: Your product has been posted.
+          - button [ref=e240] [cursor=pointer]:
+            - img [ref=e241]
+    - region "Notifications alt+T"
+    - generic [ref=e245]:
+      - banner [ref=e246]:
+        - button [ref=e247] [cursor=pointer]:
+          - img
+        - button "Marketplace Logo" [ref=e249] [cursor=pointer]:
+          - img "Marketplace Logo" [ref=e250]
+        - generic [ref=e251]:
+          - button [ref=e252] [cursor=pointer]:
+            - generic [ref=e253]:
+              - img
+          - button [ref=e254] [cursor=pointer]:
+            - img
+      - main [ref=e256]:
+        - link "+ Create listing" [ref=e258] [cursor=pointer]:
+          - /url: /create-listing/new
+          - button "+ Create listing" [ref=e259]:
+            - img
+            - text: + Create listing
+        - generic [ref=e261]:
+          - heading "Overview" [level=1] [ref=e262]
+          - paragraph [ref=e263]: Your active listings
+        - generic [ref=e265] [cursor=pointer]:
+          - img "Blue Whale Plush Toy" [ref=e269]
+          - generic [ref=e270]:
+            - generic [ref=e271]:
+              - heading "Blue Whale Plush Toy" [level=3] [ref=e272]
+              - link "Edit" [ref=e273]:
+                - /url: /create-listing/edit/e8f6b2bc-83bd-4ea1-b30d-61c82794af6d
+            - generic [ref=e274]: $25
+  - status [ref=e275]: Notification Listing publishedYour product has been posted.

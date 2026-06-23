@@ -1,0 +1,52 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e171]:
+    - banner [ref=e172]:
+      - button [ref=e173] [cursor=pointer]:
+        - img
+      - button "Marketplace Logo" [ref=e175] [cursor=pointer]:
+        - img "Marketplace Logo" [ref=e176]
+      - generic [ref=e177]:
+        - button [ref=e178] [cursor=pointer]:
+          - generic [ref=e179]:
+            - img
+        - button [ref=e180] [cursor=pointer]:
+          - img
+    - main [ref=e182]:
+      - generic [ref=e183]:
+        - generic [ref=e184]:
+          - generic [ref=e186] [cursor=pointer]:
+            - img [ref=e187]
+            - paragraph [ref=e190]: Upload photos
+          - generic [ref=e191]:
+            - paragraph [ref=e192]: Upload up to 5 photos
+            - button "Fill with sample data" [ref=e193] [cursor=pointer]:
+              - img [ref=e194]
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]: Product name
+            - textbox "Product name" [ref=e200]
+          - generic [ref=e201]:
+            - generic [ref=e202]: Price
+            - spinbutton "Price" [ref=e203]
+          - generic [ref=e204]:
+            - generic [ref=e205]: Color
+            - textbox "Color" [ref=e206]
+          - generic [ref=e207]:
+            - generic [ref=e208]: Leather
+            - textbox "Leather" [ref=e209]
+          - generic [ref=e210]:
+            - generic [ref=e211]: Year purchased
+            - spinbutton "Year purchased" [ref=e212]
+          - generic [ref=e213]:
+            - generic [ref=e214]: Stamp
+            - textbox "Stamp" [ref=e215]
+          - generic [ref=e216]:
+            - generic [ref=e217]: Location
+            - textbox "Location" [ref=e218]
+          - generic [ref=e219]:
+            - generic [ref=e220]: Description
+            - textbox "Description" [ref=e221]
+        - button "Publish" [ref=e223] [cursor=pointer]
