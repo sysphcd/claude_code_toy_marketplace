@@ -1,0 +1,15 @@
+{
+    "hooks":{
+        "Notification": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "node .claude/hooks/notification_hook.ts --sound_effect_file .claude/hooks/notification.mp3"
+                    }
+                ]
+            }
+        ]
+    }
+}
