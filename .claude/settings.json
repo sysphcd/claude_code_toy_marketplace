@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/notification_hook.ts --sound_effect_file .claude/hooks/default-notification-hook-reminder.mp3"
+            "command": "npx tsx .claude/hooks/notification_hook.ts --sound_effect_file .claude/hooks/default-notification-hook-reminder.mp3"
           }
         ]
       }
