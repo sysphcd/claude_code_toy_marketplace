@@ -11,30 +11,30 @@
   :root {
     /* Marketplace Brand Colors */
     --marketplace-bg: 32 23% 96%;          /* #f8f4f1 */
-    --marketplace-purple: 270 60% 55%;        /* #8C47D1 - RGB(140,71,209) */
+    --marketplace-green: 142 60% 55%;       /* #47D17A - RGB(71,209,122) */
     --marketplace-dark: 0 0% 27%;           /* #444444 */
     --marketplace-white: 0 0% 100%;         /* #ffffff */
     
     /* Semantic Design Tokens */
     --background: var(--marketplace-bg);
-    --foreground: var(--marketplace-purple);
-    --primary: var(--marketplace-purple);
+    --foreground: var(--marketplace-green);
+    --primary: var(--marketplace-green);
     --primary-foreground: var(--marketplace-white);
     --secondary: var(--marketplace-dark);
-    --secondary-foreground: var(--marketplace-purple);
+    --secondary-foreground: var(--marketplace-green);
     --muted: var(--marketplace-bg);
-    --muted-foreground: var(--marketplace-purple);
-    --accent: var(--marketplace-purple);
+    --muted-foreground: var(--marketplace-green);
+    --accent: var(--marketplace-green);
     --accent-foreground: var(--marketplace-white);
-    --border: var(--marketplace-purple);
+    --border: var(--marketplace-green);
     --input: var(--marketplace-bg);
-    --ring: var(--marketplace-purple);
+    --ring: var(--marketplace-green);
     --destructive: 0 84% 60%;
     --destructive-foreground: var(--marketplace-white);
     --card: var(--marketplace-bg);
-    --card-foreground: var(--marketplace-purple);
+    --card-foreground: var(--marketplace-green);
     --popover: var(--marketplace-bg);
-    --popover-foreground: var(--marketplace-purple);
+    --popover-foreground: var(--marketplace-green);
     
     /* Spacing & Layout */
     --radius: 1.375rem; /* 22px */
@@ -48,24 +48,24 @@
 
   .dark {
     --background: var(--marketplace-bg);
-    --foreground: var(--marketplace-purple);
-    --primary: var(--marketplace-purple);
+    --foreground: var(--marketplace-green);
+    --primary: var(--marketplace-green);
     --primary-foreground: var(--marketplace-white);
     --secondary: var(--marketplace-dark);
-    --secondary-foreground: var(--marketplace-purple);
+    --secondary-foreground: var(--marketplace-green);
     --muted: var(--marketplace-bg);
-    --muted-foreground: var(--marketplace-purple);
-    --accent: var(--marketplace-purple);
+    --muted-foreground: var(--marketplace-green);
+    --accent: var(--marketplace-green);
     --accent-foreground: var(--marketplace-white);
-    --border: var(--marketplace-purple);
+    --border: var(--marketplace-green);
     --input: var(--marketplace-bg);
-    --ring: var(--marketplace-purple);
+    --ring: var(--marketplace-green);
     --destructive: 0 84% 60%;
     --destructive-foreground: var(--marketplace-white);
     --card: var(--marketplace-bg);
-    --card-foreground: var(--marketplace-purple);
+    --card-foreground: var(--marketplace-green);
     --popover: var(--marketplace-bg);
-    --popover-foreground: var(--marketplace-purple);
+    --popover-foreground: var(--marketplace-green);
   }
 }
 

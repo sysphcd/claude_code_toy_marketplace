@@ -447,6 +447,31 @@ Confirmed in Sentry (`CLAUDE-CODE-TOY-MARKETPLACE-3`) with product name `"Fuck t
 
 ---
 
+### 9. Theme Color Change — Purple → Green (Notification Hook Test)
+
+**Prompt:**
+> restart the webserver. use the Dimensions: iPhone 12 Pro (390 x 844). the current theme color is blue, change it to green. go to the homepage, take a screenshot named "homepage-purple.png" to verify your change until you implement it correctly. close the browser in the end.
+
+**Purpose:** This session doubled as a manual trigger for the [Notification Hook](#notification-hook) — each Bash/tool permission prompt during the run fires the `Notification` hook, which plays `.claude/hooks/default-notification-hook-reminder.mp3` via `afplay` so the sound alert path could be verified end-to-end.
+
+**What was done:**
+- Restarted the Vite dev server on `http://localhost:8080`
+- Renamed the CSS variable `--marketplace-purple` → `--marketplace-green` in `src/index.css`, updating its value from HSL `270 60% 55%` (purple `#8C47D1` / `rgb(140,71,209)`) to HSL `142 60% 55%` (green `#47D17A` / `rgb(71,209,122)`). All semantic tokens (`--foreground`, `--primary`, `--accent`, `--border`, `--ring`, etc.) reference this one variable, so the whole theme flipped to green automatically.
+- Replaced the two hardcoded `rgb(140,71,209)` Tailwind arbitrary values in `src/pages/ConversationDetail.tsx` (sent-message bubble background/border) with `rgb(71,209,122)`
+- Resized the Playwright browser to 390×844 (iPhone 12 Pro), navigated to the homepage, and verified all accent elements (headings, category pill, prices, borders, icons) rendered green
+- Saved the verification screenshot as `homepage-purple.png` (filename kept as requested, even though it shows the green theme)
+- Closed the browser
+
+**Files changed:**
+- `src/index.css` — `--marketplace-purple` renamed to `--marketplace-green`; HSL value updated to green
+- `src/pages/ConversationDetail.tsx` — two hardcoded purple RGB values replaced with green
+
+**Known limitation:** The "Toy" wordmark in the header logo stays blue/navy — it's baked into the static PNG pixels at `src/assets/marketplace-logo.png`, not CSS-driven, so theme-variable changes can't reach it.
+
+![Homepage with green theme](homepage-purple.png)
+
+---
+
 ### Screenshots Reference
 
 All screenshots are stored in the `screenshots/` folder at the project root.

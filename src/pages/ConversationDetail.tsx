@@ -519,7 +519,7 @@ const ConversationDetail = () => {
                       <div
                         className={`px-4 py-2 rounded-2xl font-orator text-sm ${
                           message.sender_id === user?.id
-                            ? 'bg-[rgb(140,71,209)] text-white border border-[rgb(140,71,209)]/25 rounded-tr-none'
+                            ? 'bg-[rgb(71,209,122)] text-white border border-[rgb(71,209,122)]/25 rounded-tr-none'
                             : 'bg-white text-primary border border-primary/10 rounded-tl-none'
                         }`}
                       >
@@ -580,7 +580,7 @@ const ConversationDetail = () => {
                       <div
                         className={`px-4 py-2 rounded-2xl font-orator text-sm ${
                           message.sender_id === user?.id
-                            ? 'bg-[rgb(140,71,209)] text-white border border-[rgb(140,71,209)]/25 rounded-tr-none'
+                            ? 'bg-[rgb(71,209,122)] text-white border border-[rgb(71,209,122)]/25 rounded-tr-none'
                             : 'bg-white text-primary border border-primary/10 rounded-tl-none'
                         }`}
                       >
