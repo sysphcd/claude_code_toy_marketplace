@@ -106,6 +106,46 @@ Used in this project to download product/listing images during development sessi
 
 ---
 
+## Claude Code Hooks
+
+This project registers [Claude Code hooks](https://docs.claude.com/en/docs/claude-code/hooks) in `.claude/settings.json` to run scripts automatically at specific points in a session.
+
+### Notification Hook
+
+**File:** `.claude/hooks/notification_hook.ts`
+**Event:** `Notification` — fires whenever Claude Code is waiting on a user decision (e.g. approving a Bash command or tool call)
+**Purpose:** Plays an audible sound so you notice when Claude Code needs your attention, even if the terminal isn't in focus.
+
+Registered in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/notification_hook.ts --sound_effect_file .claude/hooks/default-notification-hook-reminder.mp3"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**How it works:**
+- Reads the hook's JSON payload (`notification_type`, `message`) from stdin
+- Plays the sound file passed via `--sound_effect_file` using macOS `afplay` (defaults to `.claude/hooks/default-notification-hook-reminder.mp3` if the flag is omitted)
+- Always responds with `{ "permissionDecision": "allow" }` so the hook never blocks the notification, even if sound playback fails
+- Appends a timestamped debug trail to `.claude/hooks/notification_hook_debug.log` for troubleshooting (input received, sound played/failed, etc.)
+
+**Customizing the sound:** point `--sound_effect_file` at any other audio file playable by `afplay` (e.g. a different `.mp3`/`.wav` in `.claude/hooks/`).
+
+---
+
 ## Session Log — Changes & Prompts
 
 ### 1. Homepage Screenshot (iPhone 12 Pro)
