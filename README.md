@@ -184,6 +184,48 @@ Registered in `.claude/settings.json`:
 
 **Observed behavior:** a commit attempt with `@typescript-eslint/no-explicit-any` violations in a staged `.ts` file was blocked before `git commit` executed, with the ESLint output surfaced directly in the block reason.
 
+### Test Runner Hook
+
+**File:** `.claude/hooks/test_runner_hook.ts`
+**Event:** `PostToolUse`, matcher `Edit|MultiEdit|Write` — fires after every `Edit`, `MultiEdit`, or `Write` tool call Claude Code makes
+**Purpose:** Automatically runs the project's test suite whenever Claude Code modifies a source code file, surfacing pass/fail results back into the session without waiting for a manual test run.
+
+Registered in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx tsx .claude/hooks/test_runner_hook.ts"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**How it works:**
+- Reads the hook's JSON payload (`tool_name`, `tool_input`, `tool_output`, `success`) from stdin
+- Skips immediately (`permissionDecision: allow`) unless the edited `file_path` is a source file under `src/` with a `.ts`/`.tsx`/`.js`/`.jsx` extension and is not itself a `.test.`/`.spec.` file
+- If source code was modified, detects how to run tests by checking `package.json`:
+  - Prefers dedicated scripts in order: `test:unit`, `vitest`, `jest`, then a generic `test` script (skipped if it only runs lint)
+  - Falls back to searching the repo for `*.test.ts(x)`/`*.spec.ts(x)` files and picks `npx vitest run` or `npx jest` based on what's in `devDependencies`
+- If no test setup is found, allows the tool call through with a system message suggesting tests be added
+- If tests are found, runs the test command (`execSync`, 30s timeout) and allows the tool call through either way, attaching a system message:
+  - ✅ last 500 chars of output on success
+  - ❌ last 1000 chars of output on failure, with a note to consider fixing the failing tests
+- Never blocks the edit itself — `permissionDecision` is always `allow`; the hook only surfaces test results, it doesn't gate on them
+- Appends a debug trail to `.claude/hooks/test_hook_debug.log` (raw input, detected test command, pass/fail) for troubleshooting
+- Fails open: any error parsing the hook payload or running tests falls back to `permissionDecision: allow` with an error message rather than blocking Claude Code
+
+> **Note:** This project currently has no test runner configured (no `test`/`vitest`/`jest` script in `package.json` and no `*.test.ts(x)`/`*.spec.ts(x)` files), so in practice this hook always takes the "no tests found" branch and only ever emits the 📝 suggestion message.
+
 ---
 
 ## Session Log — Changes & Prompts
