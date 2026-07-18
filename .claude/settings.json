@@ -6,7 +6,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "npx tsx .claude/hooks/notification_hook.ts --sound_effect_file .claude/hooks/default-notification-hook-reminder.mp3"
+            "command": "npx tsx .claude/hooks/notification_hook.ts --sound_effect_file .claude/hooks/notification-hook-5b.mp3"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx tsx .claude/hooks/lint_hook.ts"
           }
         ]
       }

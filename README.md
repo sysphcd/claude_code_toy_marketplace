@@ -144,6 +144,46 @@ Registered in `.claude/settings.json`:
 
 **Customizing the sound:** point `--sound_effect_file` at any other audio file playable by `afplay` (e.g. a different `.mp3`/`.wav` in `.claude/hooks/`).
 
+### Lint Pre-Commit Hook
+
+**File:** `.claude/hooks/lint_hook.ts`
+**Event:** `PreToolUse`, matcher `Bash` — fires before every Bash tool call Claude Code makes
+**Purpose:** Blocks `git commit` commands from running if the currently staged files fail linting, so bad code can't get committed via Claude Code.
+
+Registered in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx tsx .claude/hooks/lint_hook.ts"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**How it works:**
+- Reads the hook's JSON payload (`tool_name`, `tool_input.command`) from stdin
+- Passes through immediately (`permissionDecision: allow`) for any Bash command that isn't a `git commit`
+- On a `git commit` command, runs `git diff --cached --name-only --diff-filter=ACM` to get the staged files, then:
+  - Lints staged `.js`/`.ts`/`.jsx`/`.tsx` files with `npx eslint`
+  - Lints staged `.py` files with `flake8` (`--max-line-length=88`, ignoring `E203`/`W503`) if `flake8` is available
+  - Runs `black --check --diff` on staged Python files if `requirements.txt` or `pyproject.toml` is present
+- If any linter reports errors, responds with `decision: block` / `permissionDecision: deny` and a `reason` listing the failures — the commit never runs
+- If everything passes (or there's nothing to lint), responds with `permissionDecision: allow` and the commit proceeds
+- Appends a debug trail to `.claude/hooks/hook_debug.log` (staged files, which linters ran, pass/fail) for troubleshooting
+- Fails open: any error parsing the hook payload falls back to `permissionDecision: allow` rather than blocking Claude Code entirely
+
+**Observed behavior:** a commit attempt with `@typescript-eslint/no-explicit-any` violations in a staged `.ts` file was blocked before `git commit` executed, with the ESLint output surfaced directly in the block reason.
+
 ---
 
 ## Session Log — Changes & Prompts
